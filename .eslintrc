@@ -1,0 +1,9 @@
+{
+  "root": true,
+  "extends": "@mntm",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "."
+  },
+  "rules": {}
+}

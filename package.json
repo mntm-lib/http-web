@@ -1,0 +1,55 @@
+{
+  "name": "@mntm/http-web",
+  "version": "0.1.0",
+  "main": "./lib/index.cjs",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
+  "source": "./src/index.ts",
+  "exports": {
+    "import": "./lib/index.mjs",
+    "require": "./lib/index.cjs",
+    "types": "./lib/index.d.ts"
+  },
+  "author": {
+    "name": "Anton Petrov",
+    "email": "im@petrov.engineer",
+    "url": "https://petrov.engineer"
+  },
+  "description": "Deno-like http serve",
+  "license": "MIT",
+  "keywords": [
+    "server",
+    "serve",
+    "http",
+    "deno",
+    "uws",
+    "uwebsockets"
+  ],
+  "homepage": "https://github.com/mntm-lib/http-web",
+  "bugs": "https://github.com/mntm-lib/http-web/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mntm-lib/http-web.git"
+  },
+  "scripts": {
+    "build": "nanobundle build"
+  },
+  "engines": {
+    "node": ">=16.5.0"
+  },
+  "packageManager": "yarn@3.2.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "undici": "^5.6.0",
+    "uws": "github:uNetworking/uWebSockets.js#v20.10.0"
+  },
+  "devDependencies": {
+    "@mntm/eslint-config": "^1.2.0",
+    "@types/node": "^18.0.3",
+    "eslint": "^8.19.0",
+    "nanobundle": "^0.0.28",
+    "typescript": "^4.7.4"
+  }
+}
