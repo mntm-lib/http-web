@@ -90,7 +90,10 @@ export const serve = async (handler: Handler, options: ServeInit = {}) => {
           type: 'bytes',
           pull(controller) {
             http.onData((chunk, isLast) => {
-              controller.enqueue(new Uint8Array(chunk));
+              if (chunk.byteLength > 0) {
+                controller.enqueue(new Uint8Array(chunk));
+              }
+
               if (isLast) {
                 controller.close();
               }
