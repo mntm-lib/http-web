@@ -1,7 +1,5 @@
 import type { Request, Response } from 'undici';
 
-export type AnyFunction = (...args: any[]) => any;
-
 export type NetAddress = {
   hostname: string;
   port: number;
@@ -16,15 +14,12 @@ export type ConnectionInfo = {
 export type Handler = (request: Request, connInfo: ConnectionInfo) => Response | Promise<Response>;
 
 export type ListenOptions = {
-  hostname?: string;
+  hostname: string;
   port: number;
 };
 
 export type ServeInit = Partial<ListenOptions> & {
   onError?: (error: unknown) => Response | Promise<Response>;
-  onListen?: (params: {
-    hostname: string;
-    port: number;
-  }) => void;
+  onListen?: (params: ListenOptions) => void;
   signal?: AbortSignal;
 };
