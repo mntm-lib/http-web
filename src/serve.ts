@@ -4,34 +4,39 @@ import type { Handler, ListenOptions, NetAddress, ServeInit } from './types.js';
 import { App, us_listen_socket_close as close } from 'uws';
 import { Request, Response } from 'undici';
 import { TextDecoder } from 'util';
+import { setImmediate } from 'timers';
 import { ReadableStream } from 'stream/web';
 
 import { checkMultithreadingSupport } from './multithread.js';
 
 const respond = async (http: HttpResponse, response: Response) => {
-  http.writeStatus(`${response.status} ${response.statusText}`);
+  const body = await response.arrayBuffer();
+  const small = body.byteLength < 16384;
 
-  response.headers.forEach((value, key) => {
-    http.writeHeader(key, value);
+  http.cork(() => {
+    http.writeStatus(`${response.status} ${response.statusText}`);
+
+    response.headers.forEach((value, key) => {
+      http.writeHeader(key, value);
+    });
+
+    if (small) {
+      http.end(body, true);
+    }
   });
 
-  const body = await response.arrayBuffer();
+  if (!small) {
+    setImmediate(() => {
+      const offset = http.getWriteOffset();
+      const end = http.tryEnd(body, body.byteLength);
 
-  // 16kb
-  if (body.byteLength < 16384) {
-    http.end(body);
+      if (end[0] || end[1]) {
+        return;
+      }
 
-    return;
+      http.onWritable((written) => http.tryEnd(body.slice(written - offset), body.byteLength)[0]);
+    });
   }
-
-  const offset = http.getWriteOffset();
-  const end = http.tryEnd(body, body.byteLength);
-
-  if (end[0] || end[1]) {
-    return;
-  }
-
-  http.onWritable((written) => http.tryEnd(body.slice(written - offset), body.byteLength)[0]);
 };
 
 const onError = (ex: unknown) => {
