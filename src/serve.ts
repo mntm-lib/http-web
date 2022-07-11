@@ -79,7 +79,7 @@ export const serve = async (handler: Handler, options: ServeInit = {}) => {
 
       const method = incoming.getMethod().toUpperCase();
 
-      const body = method === 'OPTIONS' ?
+      const body = method === 'OPTIONS' || method === 'GET' || method === 'HEAD' ?
         null :
         new ReadableStream({
           type: 'bytes',
